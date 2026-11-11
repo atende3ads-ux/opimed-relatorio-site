@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Diagnóstico site Opimed</title>
+<meta name="description" content="Relatório de análise do site da Opimed Aparelhos Auditivos: usabilidade, design e conteúdo, técnica e SEO, com plano de ação.">
+<link rel="icon" href="img/logo-opimed.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Padrão dos relatórios 3ADS (mesmo sistema do diagnóstico da Neppo): Geist, papel claro, azul 3ADS, três frentes. */
+:root{
+  --ink:#171c1d; --ink-2:#3a4345; --muted:#687072; --paper:#fafbf9; --card:#ffffff; --soft:#f0f2ee; --line:#dde1de;
+  --blue:#a8dded; --blue-soft:#e3f3f8; --blue-ink:#3f8aa1; --logo-bg:transparent;
+  --alta:#a8432f; --alta-bg:#f7e4df; --media:#8a6512; --media-bg:#f4ead3; --baixa:#4b6a71; --baixa-bg:#e2ecee; --ok:#3f7a52; --ok-bg:#e1efe4;
+  --t-ux:#a8dded; --t-dc:#cfe1c3; --t-tec:#eadcbf;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ink:#eef1ef; --ink-2:#c8cfcd; --muted:#98a2a3; --paper:#121617; --card:#191f20; --soft:#1d2425; --line:#2d3537;
+    --blue:#7cc6dc; --blue-soft:#1b3139; --blue-ink:#8fd0e3; --logo-bg:#eef1ef;
+    --alta:#f0a390; --alta-bg:#3a2320; --media:#e6c177; --media-bg:#352b17; --baixa:#a9c7ce; --baixa-bg:#1f2e31; --ok:#9fd3ad; --ok-bg:#1c3023;
+    --t-ux:#2d5663; --t-dc:#34452b; --t-tec:#4a3f29;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#eef1ef; --ink-2:#c8cfcd; --muted:#98a2a3; --paper:#121617; --card:#191f20; --soft:#1d2425; --line:#2d3537;
+  --blue:#7cc6dc; --blue-soft:#1b3139; --blue-ink:#8fd0e3; --logo-bg:#eef1ef;
+  --alta:#f0a390; --alta-bg:#3a2320; --media:#e6c177; --media-bg:#352b17; --baixa:#a9c7ce; --baixa-bg:#1f2e31; --ok:#9fd3ad; --ok-bg:#1c3023;
+  --t-ux:#2d5663; --t-dc:#34452b; --t-tec:#4a3f29;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Geist',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;padding-left:max(16px,clamp(16px,4vw,56px),env(safe-area-inset-left,0px));padding-right:max(16px,clamp(16px,4vw,56px),env(safe-area-inset-right,0px))}
+.wrap{max-width:1120px;margin-inline:auto}
+h1,h2,h3,h4,p,ul,ol,dl{margin:0}
+h1,h2,h3{text-wrap:balance;font-weight:400}
+a{color:inherit}
+a:focus-visible{outline:2px solid var(--blue-ink);outline-offset:3px;border-radius:4px}
+.mono{font-family:'Geist Mono',ui-monospace,Menlo,monospace}
+.eyebrow{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:500;color:var(--muted)}
+strong{font-weight:600}
+.url{font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:.86em;background:var(--soft);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:24px;padding-block:28px 20px;border-bottom:1px solid var(--line)}
+.logo{display:inline-flex;align-items:center;background:var(--logo-bg);padding:6px 8px;border-radius:8px;margin-left:-8px}
+.logo img{height:30px;width:auto;display:block}
+.top-meta{font-size:12px;line-height:1.55;color:var(--muted);text-align:right}
+
+.hero{padding-block:clamp(48px,8vw,96px) 40px;display:grid;grid-template-columns:1.5fr 1fr;gap:48px;align-items:end}
+.hero h1{font-size:clamp(42px,6.2vw,84px);line-height:1.02;letter-spacing:-.055em;margin-top:18px}
+.hero h1 span{color:var(--blue-ink)}
+.hero .lead{font-size:17px;line-height:1.65;color:var(--ink-2);max-width:58ch;margin-top:24px}
+.facts{display:grid;border-top:1px solid var(--line)}
+.facts div{display:grid;grid-template-columns:130px 1fr;gap:12px;padding-block:12px;border-bottom:1px solid var(--line);font-size:13px}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0;overflow-wrap:anywhere}
+
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-block:1px solid var(--line);margin-inline:calc(-1*clamp(16px,4vw,56px));padding-inline:clamp(16px,4vw,56px)}
+.nav ul{list-style:none;padding:0;display:flex;gap:4px;overflow-x:auto;max-width:1120px;margin-inline:auto;padding-block:8px;scrollbar-width:none}
+.nav a{display:block;white-space:nowrap;font-size:13px;padding:8px 14px;border-radius:7px;text-decoration:none;color:var(--ink-2)}
+.nav a:hover{background:var(--soft);color:var(--ink)}
+
+section{padding-block:clamp(56px,8vw,96px);border-bottom:1px solid var(--line);scroll-margin-top:60px}
+section:last-of-type{border-bottom:0}
+.sec-head{display:grid;grid-template-columns:1fr minmax(0,340px);gap:40px;align-items:end;margin-bottom:44px}
+.sec-head h2{font-size:clamp(32px,4.2vw,56px);line-height:1.06;letter-spacing:-.05em;margin-top:14px}
+.sec-head p{font-size:15px;color:var(--muted);line-height:1.65}
+h3.sub{font-size:24px;letter-spacing:-.03em;margin-bottom:18px;margin-top:8px}
+.block + .block{margin-top:56px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.stat{background:var(--card);padding:26px 26px 24px;display:flex;flex-direction:column;gap:10px}
+.stat b{font-weight:300;font-size:clamp(40px,4.6vw,58px);letter-spacing:-.06em;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{font-size:14px;color:var(--ink-2);line-height:1.5;max-width:30ch}
+.stat small{font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-top:auto}
+.summary-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-top:18px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px}
+.panel.blue{background:var(--blue);border-color:transparent;color:#171c1d}
+.panel h3{font-size:22px;letter-spacing:-.03em;margin-bottom:16px}
+.panel.blue .eyebrow{color:#2f5561}
+.dash{list-style:none;padding:0;display:grid;gap:12px}
+.dash li{position:relative;padding-left:22px;font-size:15px;line-height:1.6}
+.dash li::before{content:"";position:absolute;left:0;top:.78em;width:10px;height:1px;background:currentColor;opacity:.55}
+.panel.blue .dash li{border-top:1px solid #17202024;padding-top:12px}
+.panel.blue .dash li::before{top:calc(12px + .78em)}
+
+.fronts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.front{border:1px solid var(--line);border-radius:16px;padding:26px;background:var(--card);display:flex;flex-direction:column;gap:14px}
+.front .tag{align-self:flex-start}
+.front h3{font-size:22px;letter-spacing:-.03em;line-height:1.2}
+.front p{font-size:14px;color:var(--ink-2)}
+.front .who{margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:500;padding:5px 10px;border-radius:20px;color:#171c1d;white-space:nowrap}
+.tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5}
+.tag.ux{background:var(--t-ux)} .tag.dc{background:var(--t-dc)} .tag.tec{background:var(--t-tec)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tag{color:var(--ink)}}
+:root[data-theme="dark"] .tag{color:var(--ink)}
+
+.conv{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.conv article{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:16px}
+.conv h3{font-size:22px;letter-spacing:-.03em;line-height:1.2}
+.conv .tags{display:flex;flex-wrap:wrap;gap:6px}
+.conv dl{display:grid;gap:12px}
+.conv dl div{display:grid;grid-template-columns:96px 1fr;gap:12px;font-size:14px;line-height:1.55}
+.conv dt{color:var(--muted);font-size:12px;padding-top:2px}
+.conv dd{margin:0}
+.conv .then{margin-top:auto;background:var(--blue-soft);border-radius:10px;padding:14px 16px;font-size:14px}
+.conv .then b{font-weight:600}
+
+.issues{display:grid;gap:14px}
+.issue{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 26px;display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:28px}
+.issue-head{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.issue-head h4{font-size:19px;font-weight:500;letter-spacing:-.02em;line-height:1.3}
+.issue-head .n{font-family:'Geist Mono',monospace;font-size:12px;color:var(--muted)}
+.issue ul{padding-left:18px;display:grid;gap:9px;font-size:15px;line-height:1.6;color:var(--ink-2)}
+.issue ul li::marker{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;padding:4px 9px;border-radius:5px}
+.chip.alta{color:var(--alta);background:var(--alta-bg)}
+.chip.media{color:var(--media);background:var(--media-bg)}
+.chip.baixa{color:var(--baixa);background:var(--baixa-bg)}
+.chip.ok{color:var(--ok);background:var(--ok-bg)}
+.chip.plain{text-transform:none;letter-spacing:0}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.list-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px}
+.list-card .chip{margin-bottom:16px}
+.list-card ul{padding-left:18px;display:grid;gap:12px;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+
+.panorama{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pano{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px}
+.pano h4{font-size:17px;font-weight:500;margin-bottom:14px;letter-spacing:-.02em}
+.pano ul{padding-left:18px;display:grid;gap:10px;font-size:14px;line-height:1.55;color:var(--ink-2)}
+.big{display:flex;gap:18px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.big div{display:flex;flex-direction:column}
+.big b{font-weight:300;font-size:34px;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.big span{font-size:11px;color:var(--muted);margin-top:6px}
+
+.recs{counter-reset:r;list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.recs li{counter-increment:r;background:var(--card);padding:20px 22px 20px 58px;position:relative;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.recs li::before{content:counter(r,decimal-leading-zero);position:absolute;left:20px;top:21px;font-family:'Geist Mono',monospace;font-size:12px;color:var(--blue-ink)}
+.recs li b{color:var(--ink)}
+.quote{font-size:clamp(20px,2.3vw,26px);line-height:1.4;letter-spacing:-.025em;max-width:46ch}
+
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+th,td{text-align:left;padding:13px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--soft)}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+td .bad{color:var(--alta);font-weight:500}
+
+/* Proposta (nova home) */
+.proposal{display:grid;grid-template-columns:1fr 1.15fr;gap:18px}
+.prop-card{border-radius:16px;padding:32px;background:var(--blue);color:#171c1d;display:flex;flex-direction:column;gap:18px}
+.prop-card .eyebrow{color:#2f5561}
+.prop-card h3{font-size:28px;letter-spacing:-.035em;line-height:1.15}
+.prop-card p{font-size:15.5px;line-height:1.65;color:#1f2a2c}
+.prop-link{display:inline-flex;align-items:center;gap:10px;align-self:flex-start;margin-top:auto;padding:12px 18px;border-radius:999px;background:#171c1d;color:#fff;text-decoration:none;font-size:14px;font-weight:500}
+.prop-link:hover{background:#000}
+.prop-link span{font-family:'Geist Mono',monospace;font-size:12px;opacity:.75}
+.prop-list{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px 28px}
+.prop-list li{display:grid;grid-template-columns:150px 1fr;gap:20px;padding-block:16px;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+.prop-list li:last-child{border-bottom:0}
+.prop-list li b{color:var(--ink);font-weight:500}
+.prop-list ul{list-style:none;padding:0}
+
+.timeline{list-style:none;padding:0;display:grid;border-top:1px solid var(--line)}
+.timeline li{display:grid;grid-template-columns:170px 1fr;gap:28px;padding-block:24px;border-bottom:1px solid var(--line)}
+.when{font-size:13px;font-weight:500}
+.when small{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:4px}
+.tasks{display:grid;gap:10px}
+.task{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline;font-size:15px;line-height:1.55}
+
+.closing{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.closing .panel p{font-size:15.5px;line-height:1.7;color:var(--ink-2)}
+.closing .panel p + p{margin-top:14px}
+.closing .panel.blue p{color:#1f2a2c}
+.checklist{list-style:none;padding:0;display:grid;gap:10px;margin-top:16px}
+.checklist li{display:grid;grid-template-columns:18px 1fr;gap:10px;font-size:15px;line-height:1.55;color:#1f2a2c}
+.checklist li::before{content:"";width:14px;height:14px;margin-top:4px;border:1.5px solid #2f5561;border-radius:4px}
+
+footer{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-block:32px 48px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+footer .contact{display:flex;gap:18px;flex-wrap:wrap}
+
+@media (max-width:900px){
+  .hero,.sec-head,.summary-grid,.closing,.proposal{grid-template-columns:1fr}
+  .hero{gap:32px}
+  .fronts,.panorama{grid-template-columns:1fr}
+  .conv,.two,.recs{grid-template-columns:1fr}
+  .issue{grid-template-columns:1fr;gap:16px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .timeline li{grid-template-columns:1fr;gap:12px}
+}
+@media (max-width:560px){
+  .stats{grid-template-columns:1fr}
+  .top{flex-direction:column;align-items:flex-start}
+  .top-meta{text-align:left}
+  .facts div{grid-template-columns:1fr;gap:2px}
+  .conv dl div{grid-template-columns:1fr;gap:2px}
+  .prop-list li{grid-template-columns:1fr;gap:4px}
+  .panel,.conv article,.issue,.list-card,.prop-card{padding:20px}
+  .prop-list{padding:4px 20px}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <span class="logo"><img src="img/logo-3ads.png" alt="3ADS" width="164" height="54"></span>
+    <div class="top-meta">www.3ads.com.br<br>contato@3ads.com.br<br>+55 62 98200-5986</div>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Relatório de análise · Novembro 2026</p>
+      <h1>Diagnóstico do site da <span>Opimed</span></h1>
+      <p class="lead">Análise do site de aparelhos auditivos da Opimed em três frentes: experiência do usuário, design e conteúdo, e a parte técnica de SEO. O objetivo é mostrar, de forma prática, o que trava o site hoje e o caminho para deixá-lo mais claro, moderno e focado em gerar agendamentos.</p>
+    </div>
+    <dl class="facts">
+      <div><dt>Site analisado</dt><dd class="mono">aparelhosauditivos.opimed.com.br</dd></div>
+      <div><dt>Navegação e testes</dt><dd>10 e 11/11/2026, desktop e celular</dd></div>
+      <div><dt>Fontes</dt><dd>Navegação completa, leitura do código de 12 páginas, sitemap e medição de carregamento da home</dd></div>
+      <div><dt>Proposta</dt><dd><a href="https://aprovacoes.3ads.com.br/opimed-nova-home/" target="_blank" rel="noopener">Nova home (protótipo)</a></dd></div>
+    </dl>
+  </div>
+</div>
+
+<nav class="nav" aria-label="Seções do relatório">
+  <ul>
+    <li><a href="#resumo">Resumo</a></li>
+    <li><a href="#pontos-em-comum">Pontos em comum</a></li>
+    <li><a href="#usabilidade">Usabilidade</a></li>
+    <li><a href="#design">Design e conteúdo</a></li>
+    <li><a href="#tecnica">Técnica e SEO</a></li>
+    <li><a href="#nova-home">Nova home</a></li>
+    <li><a href="#plano">Plano de ação</a></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+
+  <!-- RESUMO -->
+  <section id="resumo">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Resumo</p>
+        <h2>A Opimed tem marca forte e boa estrutura. O site ainda não mostra isso.</h2>
+      </div>
+      <p>Os números abaixo resumem os pontos de maior impacto encontrados nas três frentes.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>13</b><span>títulos principais (H1) na home. O recomendado é um por página</span><small>Estrutura</small></div>
+      <div class="stat"><b>33</b><span>das 69 imagens da home sem texto alternativo, o que prejudica acessibilidade e busca</span><small>Imagens</small></div>
+      <div class="stat"><b>3</b><span>números diferentes para o mesmo indicador: 70 mil pessoas, 60 mil pacientes e 102 mil aparelhos</span><small>Conteúdo</small></div>
+      <div class="stat"><b>250</b><span>arquivos baixados para abrir a home (2,6 MB), sendo 98 scripts de cerca de 30 serviços externos</span><small>Performance</small></div>
+      <div class="stat"><b>6</b><span>páginas de teste, cópias e versões "old" publicadas no sitemap, visíveis para o Google</span><small>Indexação</small></div>
+      <div class="stat"><b>3×</b><span>as 18 unidades aparecem repetidas no carrossel da home, fora de ordem e sem filtro</span><small>Navegação</small></div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="panel">
+        <p class="eyebrow">O que mais pesa hoje</p>
+        <h3>Cinco pontos resumem o diagnóstico</h3>
+        <ul class="dash">
+          <li>A home tenta mostrar tudo ao mesmo tempo: banners sobrepostos, três carrosséis com os mesmos produtos e as unidades repetidas três vezes.</li>
+          <li>Não existe um caminho claro para cada visitante. Quem suspeita de perda auditiva, quem quer comprar e quem já é cliente caem no mesmo lugar.</li>
+          <li>Os números da empresa mudam de um bloco para outro, o que enfraquece a credibilidade.</li>
+          <li>O botão de WhatsApp do rodapé usa o 0800, que não tem WhatsApp. Parte dos contatos se perde nesse clique.</li>
+          <li>A estrutura técnica (títulos, descrições, imagens e scripts) dificulta o Google entender e ranquear as páginas.</li>
+        </ul>
+      </div>
+      <div class="panel blue">
+        <p class="eyebrow">O que já funciona</p>
+        <h3>Uma boa base para evoluir</h3>
+        <ul class="dash">
+          <li>37 anos de história, 18 unidades e as três marcas líderes do mercado.</li>
+          <li>Blog ativo, com temas que o público realmente pesquisa.</li>
+          <li>HTTPS, canonical e robots configurados, e o site liberado para buscadores.</li>
+          <li>WhatsApp com rastreamento já usado nos banners e nas campanhas.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3 class="sub">Como a análise foi dividida</h3>
+      <div class="fronts">
+        <div class="front">
+          <span class="tag ux">Usabilidade</span>
+          <h3>Experiência do usuário e usabilidade</h3>
+          <p>Navegação, arquitetura das informações, fluxos, clareza dos botões, experiência em desktop e celular e oportunidades de conversão.</p>
+          <p class="who">João Pedro Junqueira</p>
+        </div>
+        <div class="front">
+          <span class="tag dc">Design e conteúdo</span>
+          <h3>Design, conteúdo e organização das informações</h3>
+          <p>Consistência visual, hierarquia, tipografia, imagens, clareza dos textos, repetição de conteúdo e percepção de marca.</p>
+          <p class="who">João Pedro Junqueira</p>
+        </div>
+        <div class="front">
+          <span class="tag tec">Técnica e SEO</span>
+          <h3>Análise técnica, SEO e WordPress</h3>
+          <p>Estrutura de títulos, descrições, imagens, sitemap, páginas publicadas, peso da página e scripts de terceiros.</p>
+          <p class="who">Thiago Barreto</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PONTOS EM COMUM -->
+  <section id="pontos-em-comum">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Pontos em comum</p>
+        <h2>Onde as três análises chegaram ao mesmo lugar</h2>
+      </div>
+      <p>Esses temas apareceram em mais de uma frente. Por isso, são os que mais merecem prioridade.</p>
+    </div>
+
+    <div class="conv">
+      <article>
+        <div class="tags"><span class="tag ux">Usabilidade</span><span class="tag dc">Design e conteúdo</span><span class="tag tec">Técnica e SEO</span></div>
+        <h3>A home precisa ser reorganizada</h3>
+        <dl>
+          <div><dt>Usabilidade</dt><dd>Banner rotativo com slides sobrepostos, texto cortado e um pop-up cobrindo a primeira tela.</dd></div>
+          <div><dt>Design</dt><dd>Três carrosséis com os mesmos produtos e as 18 unidades repetidas três vezes.</dd></div>
+          <div><dt>Técnica</dt><dd>13 títulos H1 e 117 subtítulos H2 na mesma página, além de 250 arquivos para carregar.</dd></div>
+        </dl>
+        <p class="then"><b>Caminho:</b> nova home com uma ideia por seção, banners bem diagramados e cada conteúdo aparecendo uma vez. O protótipo já está pronto para aprovação.</p>
+      </article>
+      <article>
+        <div class="tags"><span class="tag ux">Usabilidade</span><span class="tag tec">Técnica e SEO</span></div>
+        <h3>O caminho até o contato tem atrito</h3>
+        <dl>
+          <div><dt>Usabilidade</dt><dd>O formulário pede e-mail sem necessidade e lista 17 unidades, enquanto o carrossel mostra 18.</dd></div>
+          <div><dt>Técnica</dt><dd>O link de WhatsApp do rodapé aponta para o número 0800 100 1989, que não funciona no WhatsApp.</dd></div>
+        </dl>
+        <p class="then"><b>Caminho:</b> um único link de WhatsApp com rastreamento em todo o site e formulário com três campos: nome, WhatsApp e unidade.</p>
+      </article>
+      <article>
+        <div class="tags"><span class="tag ux">Usabilidade</span><span class="tag dc">Design e conteúdo</span></div>
+        <h3>Os números da empresa não batem</h3>
+        <dl>
+          <div><dt>Usabilidade</dt><dd>O visitante vê "70.000 pessoas atendidas" no topo e "mais de 60 mil pacientes" mais abaixo.</dd></div>
+          <div><dt>Design</dt><dd>"Mais de 35 anos" convive com "Desde 1989" (37 anos), e a contagem de unidades varia entre 17 e 18.</dd></div>
+        </dl>
+        <p class="then"><b>Caminho:</b> uma ficha única com os números oficiais, usada igual em todas as páginas.</p>
+      </article>
+      <article>
+        <div class="tags"><span class="tag dc">Design e conteúdo</span><span class="tag tec">Técnica e SEO</span></div>
+        <h3>Produtos sem hierarquia</h3>
+        <dl>
+          <div><dt>Design</dt><dd>Os cards mostram o formato ("Receptor no Canal") no lugar do nome do modelo.</dd></div>
+          <div><dt>Técnica</dt><dd>As páginas de marca têm de 10 a 18 títulos H1, e quase todas as imagens de produto estão sem texto alternativo e em PNG de 2048 px.</dd></div>
+        </dl>
+        <p class="then"><b>Caminho:</b> um modelo único de card e de página de produto, com nome, marca, formato e recursos, um H1 por página e imagens leves.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- USABILIDADE -->
+  <section id="usabilidade">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Frente 1 · Usabilidade</p>
+        <h2>Experiência do usuário e usabilidade</h2>
+      </div>
+      <p>As sugestões partem da percepção de quem navega pelo site, com foco em encurtar caminhos e aumentar os agendamentos.</p>
+    </div>
+
+    <h3 class="sub">Home</h3>
+    <div class="issues">
+      <article class="issue">
+        <div class="issue-head"><h4>Primeira tela (banners)</h4><span class="chip alta">Alta</span></div>
+        <ul><li>Os slides aparecem sobrepostos, com texto cortado, e o pop-up de oferta cobre parte do banner.</li><li>O botão do banner da Black Opimed diz "Saibas mais" e leva direto ao WhatsApp, sem avisar.</li><li>Sugestão: manter os banners rotativos, mas com um modelo fixo de diagramação, abas com o nome de cada banner, controle de pausa e botões que dizem para onde levam.</li></ul>
+      </article>
+      <article class="issue">
+        <div class="issue-head"><h4>Caminhos por perfil de visitante</h4><span class="chip media">Média</span></div>
+        <ul><li>A home não separa quem acha que não ouve bem, quem quer escolher um aparelho e quem já é cliente e precisa de manutenção.</li><li>Sugestão: logo após a primeira tela, três caminhos claros: teste online, avaliação na unidade e suporte.</li></ul>
+      </article>
+      <article class="issue">
+        <div class="issue-head"><h4>Vitrine de produtos</h4><span class="chip alta">Alta</span></div>
+        <ul><li>Três carrosséis com os mesmos produtos e o link "Todos os produtos" repetido em cada um.</li><li>Sugestão: uma vitrine só, com quatro modelos em destaque e um botão para ver todos.</li></ul>
+      </article>
+      <article class="issue">
+        <div class="issue-head"><h4>Unidades</h4><span class="chip alta">Alta</span></div>
+        <ul><li>As 18 unidades aparecem três vezes num carrossel, fora de ordem, e o visitante precisa passar card por card até achar a sua cidade.</li><li>Sugestão: filtro por estado e, em cada unidade, os botões "Como chegar" e "Ligar".</li></ul>
+      </article>
+      <article class="issue">
+        <div class="issue-head"><h4>Formulário e WhatsApp</h4><span class="chip alta">Alta</span></div>
+        <ul><li>O link de WhatsApp do rodapé usa o 0800, que não tem WhatsApp.</li><li>O formulário pede e-mail, um campo que o público dessa faixa etária costuma pular ou desistir.</li><li>Sugestão: três campos (nome, WhatsApp e unidade) e o mesmo link rastreado de WhatsApp em todo o site.</li></ul>
+      </article>
+      <article class="issue">
+        <div class="issue-head"><h4>O que acontece depois do agendamento</h4><span class="chip media">Média</span></div>
+        <ul><li>A home não explica as etapas: avaliação, teste do aparelho, ajuste e acompanhamento. Isso gera insegurança em quem nunca fez um exame.</li><li>Sugestão: uma linha do tempo simples, com quatro etapas.</li></ul>
+      </article>
+      <article class="issue">
+        <div class="issue-head"><h4>Depoimentos</h4><span class="chip baixa">Baixa</span></div>
+        <ul><li>O widget do Google mostra avaliações de uma palavra ("Ótimo") lado a lado com as completas.</li><li>Sugestão: destacar as avaliações com texto, de preferência citando o profissional e a unidade.</li></ul>
+      </article>
+    </div>
+
+    <div class="block">
+      <div class="panel">
+        <p class="eyebrow">Percepção geral da frente</p>
+        <p class="quote" style="margin-top:14px">O site tem tudo o que o visitante precisa. O trabalho agora é organizar: um caminho por perfil, cada informação uma vez e um contato que funcione em qualquer clique.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESIGN -->
+  <section id="design">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Frente 2 · Design e conteúdo</p>
+        <h2>Design, conteúdo e organização das informações</h2>
+      </div>
+      <p>A identidade da Opimed (grafite, branco e o amarelo dos destaques) é boa, mas aparece misturada com fontes, cores e blocos de épocas diferentes.</p>
+    </div>
+
+    <h3 class="sub">Problemas críticos</h3>
+    <div class="issues">
+      <article class="issue">
+        <div class="issue-head"><span class="n">01</span><h4>Falta de padrão visual</h4><span class="chip alta">Alta</span></div>
+        <ul>
+          <li><strong>Tipografia:</strong> a home carrega seis famílias de fonte (Montserrat, Figtree, Poppins, Roboto, Helvetica e a fonte do sistema). Títulos, botões e textos mudam de estilo de uma seção para outra.</li>
+          <li><strong>Cor:</strong> o vermelho da campanha ocupa a faixa de produtos e convive com o grafite e o amarelo da marca, sem uma regra de uso.</li>
+          <li><strong>Imagens:</strong> fotos de campanha, renders de produto em fundo branco e logos em versões diferentes aparecem lado a lado, sem um tratamento comum.</li>
+        </ul>
+      </article>
+      <article class="issue">
+        <div class="issue-head"><span class="n">02</span><h4>Conteúdo repetido</h4><span class="chip alta">Alta</span></div>
+        <ul>
+          <li>Os mesmos produtos se repetem em três carrosséis, e as unidades aparecem três vezes.</li>
+          <li>Nos cards de produto, o rótulo "Receptor no Canal" aparece no lugar do nome do modelo, repetido em vários cards seguidos.</li>
+          <li><strong>Impacto:</strong> a página fica longa e cansativa, e o visitante perde a referência do que já viu.</li>
+        </ul>
+      </article>
+      <article class="issue">
+        <div class="issue-head"><span class="n">03</span><h4>Números inconsistentes</h4><span class="chip alta">Alta</span></div>
+        <ul>
+          <li>"70.000 pessoas atendidas", "mais de 60 mil pacientes" e "mais de 102.000 aparelhos adaptados" aparecem em blocos diferentes da mesma página.</li>
+          <li>"Mais de 35 anos" convive com "Desde 1989", que hoje são 37 anos.</li>
+          <li>O formulário lista 17 unidades e o carrossel mostra 18 (Recife aparece duas vezes, em Boa Viagem e na Ilha do Leite).</li>
+        </ul>
+      </article>
+      <article class="issue">
+        <div class="issue-head"><span class="n">04</span><h4>Erros de texto</h4><div class="chips"><span class="chip alta">Alta</span><span class="chip ok plain">Rápido de corrigir</span></div></div>
+        <ul>
+          <li>Botão do banner principal: "Saibas mais".</li>
+          <li>Descrições das páginas de marca com quebras de linha no meio da frase, que aparecem cortadas no Google.</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="block">
+      <h3 class="sub">Oportunidades de melhoria</h3>
+      <div class="two">
+        <div class="list-card">
+          <span class="chip media">Prioridade média</span>
+          <ul>
+            <li><strong>Tipos de aparelho:</strong> explicar os quatro formatos (receptor no canal, microcanal, intracanal e retroauricular) com o que muda na prática: visual, para quem é indicado e recursos.</li>
+            <li><strong>Marcas:</strong> uma seção própria para Widex, Signia e ReSound, com origem, principais modelos e link para os aparelhos de cada uma.</li>
+            <li><strong>Acompanhamento:</strong> mostrar o que a Opimed oferece depois da compra (garantia, laboratório próprio, revisões e Troca Inteligente). Hoje esse diferencial fica escondido.</li>
+            <li><strong>Dúvidas frequentes:</strong> reunir as perguntas que mais chegam nas unidades (preço, teste antes da compra, manutenção).</li>
+          </ul>
+        </div>
+        <div class="list-card">
+          <span class="chip baixa">Prioridade baixa</span>
+          <ul>
+            <li><strong>Espaçamento:</strong> as seções ficam muito próximas, o que deixa a página carregada.</li>
+            <li><strong>Botões:</strong> padronizar em dois estilos, um principal ("Agendar avaliação") e um secundário.</li>
+            <li><strong>Teste online:</strong> dar mais destaque, como porta de entrada para quem ainda não está pronto para agendar.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3 class="sub">Recomendações</h3>
+      <ol class="recs">
+        <li><b>Guia visual mínimo:</b> Montserrat nos títulos e uma fonte de texto, grafite, branco e amarelo como cor de destaque, dois estilos de botão e um padrão de foto e de render de produto.</li>
+        <li><b>Ficha única de números:</b> pessoas atendidas, aparelhos adaptados, anos e unidades, usada igual em todo o site.</li>
+        <li><b>Modelo de banner:</b> foto com texto à esquerda para campanhas e fundo claro com o aparelho em destaque para produtos.</li>
+        <li><b>Modelo de card de produto:</b> nome do modelo, marca, formato e dois recursos.</li>
+        <li><b>Novas seções na home:</b> caminhos por perfil, tipos de aparelho, marcas, como funciona, acompanhamento e dúvidas.</li>
+        <li><b>Corrigir os erros de texto</b> listados no problema 04.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TECNICA -->
+  <section id="tecnica">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Frente 3 · Técnica e SEO</p>
+        <h2>Análise técnica e SEO</h2>
+      </div>
+      <p>Levantamento feito na home e em mais 11 páginas principais. A auditoria do painel do WordPress e o teste oficial do PageSpeed entram na primeira semana do plano.</p>
+    </div>
+
+    <div class="panorama">
+      <div class="pano">
+        <h4>Peso da home</h4>
+        <div class="big"><div><b>250</b><span>arquivos</span></div><div><b>2,6 MB</b><span>transferidos</span></div></div>
+        <ul>
+          <li>98 scripts e 46 folhas de estilo carregando na mesma página.</li>
+          <li>Cerca de 30 serviços externos, incluindo dois mapas de calor ao mesmo tempo (Clarity e Hotjar), Leadster, RD Station, Meta, TikTok e Google.</li>
+          <li>Imagens de produto em PNG de 2048 × 2048 px, mais pesadas do que o espaço onde aparecem.</li>
+        </ul>
+      </div>
+      <div class="pano">
+        <h4>Estrutura de títulos</h4>
+        <div class="big"><div><b>13</b><span>H1 na home</span></div><div><b>3</b><span>páginas sem H1</span></div></div>
+        <ul>
+          <li>Cada card de produto usa um H1, o título reservado para o assunto principal da página.</li>
+          <li>Institucional, Unidades e Teste auditivo não têm nenhum H1.</li>
+          <li>As páginas de marca chegam a 18 H1 (ReSound) e a página de Unidades tem 154 subtítulos H2.</li>
+        </ul>
+      </div>
+      <div class="pano">
+        <h4>Sitemap e páginas publicadas</h4>
+        <div class="big"><div><b>16</b><span>páginas no sitemap</span></div><div><b>6</b><span>de teste ou cópia</span></div></div>
+        <ul>
+          <li>Estão publicadas e enviadas ao Google: /teste/, /pagina-exemplo/, /black-friday-clone/, /unidade-recife-old/, /unidade-recife-2/ e /home/.</li>
+          <li>O sitemap também expõe 7 listagens internas do JetEngine.</li>
+          <li>São 199 páginas de tag para 76 posts, a maioria com pouco conteúdo.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3 class="sub">Páginas analisadas</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Página</th><th>H1</th><th>Descrição no Google</th><th>Imagens sem texto alternativo</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">/</td><td class="num"><span class="bad">13</span></td><td>Sim</td><td class="num">33 de 69</td></tr>
+            <tr><td class="mono">/institucional/</td><td class="num"><span class="bad">0</span></td><td>Sim</td><td class="num">12 de 19</td></tr>
+            <tr><td class="mono">/unidades/</td><td class="num"><span class="bad">0</span></td><td><span class="bad">Não</span></td><td class="num">25 de 27</td></tr>
+            <tr><td class="mono">/produtos/</td><td class="num"><span class="bad">6</span></td><td><span class="bad">Não</span></td><td class="num">9 de 10</td></tr>
+            <tr><td class="mono">/blog/</td><td class="num"><span class="bad">10</span></td><td><span class="bad">Não</span></td><td class="num">3 de 8</td></tr>
+            <tr><td class="mono">/teste-auditivo/</td><td class="num"><span class="bad">0</span></td><td><span class="bad">Não</span></td><td class="num">3 de 4</td></tr>
+            <tr><td class="mono">/marca/widex/</td><td class="num"><span class="bad">16</span></td><td>Sim</td><td class="num">29 de 30</td></tr>
+            <tr><td class="mono">/marca/signia/</td><td class="num"><span class="bad">10</span></td><td>Sim</td><td class="num">23 de 24</td></tr>
+            <tr><td class="mono">/marca/resound/</td><td class="num"><span class="bad">18</span></td><td>Sim</td><td class="num">31 de 32</td></tr>
+            <tr><td class="mono">/tipo-categoria/receptor-no-canal/</td><td class="num"><span class="bad">6</span></td><td><span class="bad">Não</span></td><td class="num">18 de 19</td></tr>
+            <tr><td class="mono">/produtos/pure-charge-go-ix-bct/</td><td class="num"><span class="bad">6</span></td><td><span class="bad">Não</span></td><td class="num">16 de 18</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3 class="sub">Problemas críticos</h3>
+      <div class="issues">
+        <article class="issue">
+          <div class="issue-head"><span class="n">01</span><h4>Hierarquia de títulos quebrada</h4><span class="chip alta">Alta</span></div>
+          <ul>
+            <li>Os modelos de card de produto usam H1, então toda página com uma lista de produtos acumula vários H1. Páginas importantes ficam sem nenhum.</li>
+            <li><strong>Impacto:</strong> o Google não entende qual é o assunto principal da página, o que enfraquece o posicionamento de termos como "aparelho auditivo Widex" ou "aparelho auditivo em Goiânia".</li>
+          </ul>
+        </article>
+        <article class="issue">
+          <div class="issue-head"><span class="n">02</span><h4>Páginas sem descrição para o Google</h4><span class="chip alta">Alta</span></div>
+          <ul>
+            <li>6 das 11 páginas analisadas não têm meta description: Unidades, Produtos, Blog, Teste auditivo, a categoria Receptor no canal e a página de produto.</li>
+            <li>Sem descrição, o Google monta o resumo sozinho, muitas vezes com trechos soltos da página.</li>
+          </ul>
+        </article>
+        <article class="issue">
+          <div class="issue-head"><span class="n">03</span><h4>Páginas de teste e cópias publicadas</h4><span class="chip alta">Alta</span></div>
+          <ul>
+            <li>/teste/, /pagina-exemplo/, /black-friday-clone/, /unidade-recife-old/, /unidade-recife-2/ e /home/ estão no sitemap. Isso gera conteúdo duplicado e expõe páginas internas.</li>
+            <li>As listagens do JetEngine (por exemplo <span class="url">/?jet-engine=listing-produtos</span>) também estão no sitemap e não deveriam ser indexadas.</li>
+          </ul>
+        </article>
+        <article class="issue">
+          <div class="issue-head"><span class="n">04</span><h4>Excesso de scripts e imagens pesadas</h4><span class="chip alta">Alta</span></div>
+          <ul>
+            <li>98 scripts de cerca de 30 serviços externos carregam já na abertura da home. Dois deles fazem a mesma coisa (Clarity e Hotjar são mapas de calor).</li>
+            <li>Renders de produto em PNG de 2048 px aparecem em espaços de cerca de 300 px.</li>
+            <li><strong>Impacto:</strong> a página demora mais para ficar pronta no celular, justamente onde está a maior parte do tráfego de mídia paga.</li>
+          </ul>
+        </article>
+        <article class="issue">
+          <div class="issue-head"><span class="n">05</span><h4>WhatsApp com número inválido</h4><div class="chips"><span class="chip alta">Alta</span><span class="chip ok plain">Rápido de corrigir</span></div></div>
+          <ul>
+            <li>Os links "0800-100-1989", "Suporte ao Cliente" e "Whatsapp" do rodapé abrem o WhatsApp com o número 0800, que não pode receber mensagens.</li>
+            <li>O link rastreado (Tintim) já existe nos banners e deve ser usado em todos os pontos.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3 class="sub">Oportunidades de otimização</h3>
+      <div class="two">
+        <div class="list-card">
+          <span class="chip media">Prioridade média</span>
+          <ul>
+            <li><strong>SEO local:</strong> só 3 das 18 unidades têm página própria (Recife, Goiânia e Brasília). Uma página por unidade, com endereço, telefone, mapa e dados estruturados (LocalBusiness), ajuda a aparecer em buscas como "aparelho auditivo em Palmas".</li>
+            <li><strong>Textos alternativos:</strong> descrever as imagens de produto com marca e modelo, o que também ajuda na busca por imagens.</li>
+            <li><strong>Imagens:</strong> converter os renders para WebP no tamanho em que são exibidos.</li>
+            <li><strong>Páginas de tag:</strong> 199 tags para 76 posts. Aplicar noindex nas tags ou reduzi-las.</li>
+          </ul>
+        </div>
+        <div class="list-card">
+          <span class="chip baixa">Prioridade baixa</span>
+          <ul>
+            <li><strong>Títulos das páginas:</strong> padronizar o separador. Hoje alguns usam "|" e outros "–".</li>
+            <li><strong>Links do menu:</strong> vários apontam para endereços sem a barra final (/produtos, /unidades) e passam por um redirecionamento antes de abrir.</li>
+            <li><strong>Mapas de calor:</strong> manter só uma ferramenta (Clarity ou Hotjar).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3 class="sub">Recomendações</h3>
+      <ol class="recs">
+        <li><b>Corrigir o WhatsApp do rodapé</b> com o link rastreado usado nos banners.</li>
+        <li><b>Despublicar ou aplicar noindex</b> nas páginas de teste e cópias, e retirar as listagens do JetEngine do sitemap.</li>
+        <li><b>Um H1 por página</b> nos modelos de home, marca, produto, categoria e unidades. Cards de produto passam a usar H3.</li>
+        <li><b>Escrever meta descriptions</b> para Unidades, Produtos, Blog, Teste auditivo, categorias e produtos.</li>
+        <li><b>Plano de performance:</b> carregar scripts de terceiros com atraso, remover o mapa de calor duplicado e converter imagens para WebP.</li>
+        <li><b>Auditoria do WordPress:</b> versões, plugins, backups e teste oficial do PageSpeed para medir a evolução.</li>
+        <li><b>Páginas de unidade</b> com dados estruturados de negócio local.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- NOVA HOME -->
+  <section id="nova-home">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Proposta</p>
+        <h2>A nova home já está pronta para aprovação</h2>
+      </div>
+      <p>O protótipo reúne as recomendações das três frentes. O visual segue a identidade da Opimed, com uma diagramação mais moderna e organizada.</p>
+    </div>
+
+    <div class="proposal">
+      <div class="prop-card">
+        <p class="eyebrow">Protótipo navegável</p>
+        <h3>Nova home Opimed</h3>
+        <p>Funciona no computador e no celular. Os banners giram sozinhos, as abas de tipos de aparelho e o filtro de unidades podem ser testados, e o formulário simula o envio.</p>
+        <a class="prop-link" href="https://aprovacoes.3ads.com.br/opimed-nova-home/" target="_blank" rel="noopener">Abrir a nova home <span>aprovacoes.3ads.com.br</span></a>
+      </div>
+      <ul class="prop-list">
+        <li><b>Banners rotativos</b><span>Os cinco banners atuais (Black Opimed, institucional, ReSound Nexia, Signia Pure e Signia Silk) em dois modelos fixos, com abas e controle de pausa.</span></li>
+        <li><b>Como começar</b><span>Avaliação na unidade, teste online e ligação gratuita, lado a lado.</span></li>
+        <li><b>Tipos de aparelho</b><span>Abas com os quatro formatos e o que muda em cada um.</span></li>
+        <li><b>Modelos e marcas</b><span>Vitrine única de modelos e carrossel com Widex, Signia e ReSound.</span></li>
+        <li><b>Unidades</b><span>Filtro por estado, com "Agendar aqui" e "Como chegar".</span></li>
+        <li><b>Como funciona</b><span>Linha do tempo com as quatro etapas do atendimento.</span></li>
+        <li><b>Acompanhamento</b><span>Garantia, laboratório próprio, revisões, Troca Inteligente e suporte.</span></li>
+        <li><b>Contato</b><span>Dúvidas frequentes, formulário com três campos e WhatsApp fixo no canto da tela.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PLANO -->
+  <section id="plano">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Plano de ação</p>
+        <h2>Primeiro corrigir a base, depois implementar a nova home</h2>
+      </div>
+      <p>Cronograma consolidado das três frentes, contado a partir da aprovação deste relatório e da nova home.</p>
+    </div>
+
+    <ol class="timeline">
+      <li>
+        <div class="when">Semana 1<small>Correções rápidas</small></div>
+        <div class="tasks">
+          <div class="task"><span class="tag tec">Técnica</span><span>Corrigir o WhatsApp do rodapé, tirar as páginas de teste e cópias do ar e limpar o sitemap. Auditoria do WordPress e teste oficial do PageSpeed.</span></div>
+          <div class="task"><span class="tag dc">Design</span><span>Corrigir os textos e aplicar a ficha única de números.</span></div>
+          <div class="task"><span class="tag ux">Usabilidade</span><span>Retirar o pop-up que cobre o banner e simplificar o formulário para três campos.</span></div>
+        </div>
+      </li>
+      <li>
+        <div class="when">Semanas 2 e 3<small>Base técnica e aprovação</small></div>
+        <div class="tasks">
+          <div class="task"><span class="tag tec">Técnica</span><span>Um H1 por página nos modelos, meta descriptions nas páginas principais e plano de performance (scripts com atraso e imagens em WebP).</span></div>
+          <div class="task"><span class="tag dc">Design</span><span>Ajustes finais da nova home a partir do retorno da Opimed e guia visual mínimo.</span></div>
+        </div>
+      </li>
+      <li>
+        <div class="when">Semanas 3 a 5<small>Implementação da nova home</small></div>
+        <div class="tasks">
+          <div class="task"><span class="tag dc">Design</span><span>Montagem da nova home no WordPress, já com os novos banners.</span></div>
+          <div class="task"><span class="tag tec">Técnica</span><span>Imagens otimizadas, textos alternativos e estrutura de títulos correta desde o início.</span></div>
+          <div class="task"><span class="tag ux">Usabilidade</span><span>Testes no computador e no celular antes de publicar.</span></div>
+        </div>
+      </li>
+      <li>
+        <div class="when">Semanas 5 e 6<small>Páginas internas</small></div>
+        <div class="tasks">
+          <div class="task"><span class="tag dc">Design</span><span>Páginas de marca, produto e unidades no mesmo padrão da nova home.</span></div>
+          <div class="task"><span class="tag tec">Técnica</span><span>Uma página por unidade, com dados estruturados de negócio local.</span></div>
+        </div>
+      </li>
+      <li>
+        <div class="when">Semana 7 em diante<small>Crescimento</small></div>
+        <div class="tasks">
+          <div class="task"><span class="tag ux">Usabilidade</span><span>Acompanhar mapas de calor e conversões da nova home e ajustar o que for preciso.</span></div>
+          <div class="task"><span class="tag tec">Técnica</span><span>Relatório mensal com páginas indexadas, buscas locais e desempenho no celular.</span></div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="block closing">
+      <div class="panel">
+        <p class="eyebrow">Percepção geral</p>
+        <p style="margin-top:14px">A Opimed tem o que a maioria das concorrentes não tem: história, presença em 18 cidades, as três marcas líderes e acompanhamento depois da compra. Hoje o site esconde esses diferenciais entre blocos repetidos e informações que não batem.</p>
+        <p>Organizando a home e corrigindo a base técnica, o site passa a trabalhar a favor das campanhas: quem chega encontra rápido o que procura e consegue agendar sem atrito.</p>
+      </div>
+      <div class="panel blue">
+        <p class="eyebrow">Para seguirmos</p>
+        <p style="margin-top:14px">Precisamos que a Opimed valide a nova home e confirme quatro informações:</p>
+        <ul class="checklist">
+          <li>O número oficial de pessoas atendidas (70 mil ou 60 mil).</li>
+          <li>Se são 17 ou 18 unidades.</li>
+          <li>As condições para testar o aparelho antes da compra.</li>
+          <li>Quais avaliações do Google devem ficar em destaque.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="wrap">
+  <footer>
+    <span class="logo"><img src="img/logo-3ads.png" alt="3ADS" width="164" height="54" style="height:24px"></span>
+    <div class="contact"><span>www.3ads.com.br</span><span>contato@3ads.com.br</span><span>+55 62 98200-5986</span></div>
+  </footer>
+</div>
+
+</body>
+</html>
